@@ -1,35 +1,81 @@
-# Musical_Typewriter
+### Musical Typewriter
 
-Use the keyboard to learn to type and play music at the same time.
+A fun and educational tool to learn typing and music simultaneously!
 
-Features:
+---
 
-When choosing a difficulty level (easy, medium, hard):
+#### Features:
 
-- Easy level uses only the middle row of the keyboard.
-- Medium level uses the bottom row and the middle row.
-- Hard level uses bottom row, middle row and upper row of the keyboard.
+**Difficulty Levels:**
 
-When pressing a key the computer keyboard :
+1. **Easy Level:**
+   - Uses only the middle row of the keyboard (ASDF...JKL;).
+2. **Medium Level:**
+   - Uses both the bottom row (ZXCV...NM,./) and the middle row.
+3. **Hard Level:**
+   - Uses the bottom row, middle row, and the upper row (QWERTY...POIUY...).
 
-- The corresponding key on the virtual piano lights up and plays the note associated with the key.
-- The corresponding letter from the sentence is highlighted, in green or in red depending of the accuracy, and the cursor move to the next letter.
+**Interactive Typing and Playing:**
 
-When going through the sentence:
+- When pressing a key on the computer keyboard:
+  - The corresponding key on the virtual piano lights up and plays the associated note.
+  - The corresponding letter from the sentence is highlighted:
+    - Green for correct letters.
+    - Red for incorrect letters.
+  - The cursor moves to the next letter.
 
-- At first, a sentence is generated with random set of letters taken from the difficulty level chosen.
-- At each letter, a score is calculated.
-- At the end of the sentence, the total score is displayed.
+**Sentence Progression:**
 
-When activating the rythm mode:
+- A randomly generated sentence appears, with letters based on the selected difficulty level.
+- Each typed letter contributes to the score.
+- Total score is displayed at the end of the sentence.
 
-- A metronome tick is played and compared with the user's typing speed.
-- At each tick synchronized with a key down, a score of precision is calculated.
-- At the end of the sentence, the total score is displayed.
+**Rhythm Mode:**
 
-More:
+- A metronome tick is played to synchronize typing speed with rhythm.
+- A precision score is calculated for each tick that aligns with a key press.
+- Total precision score is displayed at the end of the sentence.
 
-- User can choose the sound of the piano.
-- User can set up the speed, sound, pitch of the metronome.
-- User can choose between dark or light mode.
+**Customization Options:**
 
+- **Piano Sound:** Users can choose different piano sounds.
+- **Metronome Settings:**
+  - Speed
+  - Sound
+  - Pitch
+- **Appearance:** Users can toggle between dark mode and light mode.
+
+---
+
+#### User Flow:
+
+1. **Select Difficulty Level:**
+
+   - User chooses between Easy, Medium, or Hard.
+
+2. **Start Typing:**
+
+   - A sentence is displayed.
+   - User types the sentence while:
+     - Virtual piano keys light up and play notes.
+     - Letters are highlighted based on accuracy.
+     - Score updates in real-time.
+
+3. **Engage Rhythm Mode (Optional):**
+
+   - Metronome starts ticking.
+   - User tries to type in sync with the metronome.
+   - Precision score updates based on synchronization.
+
+4. **View Results:**
+
+   - At the end of the sentence, total scores for typing accuracy and rhythm precision are displayed.
+
+5. **Customize Experience:**
+   - Adjust piano sound settings.
+   - Modify metronome settings.
+   - Switch between dark and light modes for visual comfort.
+
+---
+
+This tool combines typing practice with musical education, making learning both skills enjoyable and interactive.
