@@ -1,0 +1,86 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  border: 0;
+}
+
+button {
+  cursor: pointer;
+  display: block;
+}
+
+body,
+.sentence_display {
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.correct {
+  color: black;
+}
+.incorrect {
+  color: red;
+}
+.hidden {
+  display: none;
+}
+.container {
+  position: relative;
+  width: 400px;
+}
+.sentence_display {
+  width: 100%;
+  white-space: pre-wrap; /* Preserve spaces and line breaks */
+  color: rgba(0, 0, 0, 0.5);
+}
+.type_input {
+  position: relative;
+  width: 100%;
+  opacity: 0; /* Make the textarea invisible */
+}
+/* Background Styles Only */
+
+@import url("https://fonts.googleapis.com/css?family=Raleway");
+
+* {
+  font-family: Raleway;
+}
+
+.side-links {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.side-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  margin-bottom: 10px;
+  color: white;
+  width: 180px;
+  padding: 10px 0;
+  border-radius: 10px;
+}
+
+.side-link-youtube {
+  background-color: red;
+}
+
+.side-link-twitter {
+  background-color: #1da1f2;
+}
+
+.side-link-github {
+  background-color: #6e5494;
+}
+
+.side-link-text {
+  margin-left: 10px;
+  font-size: 18px;
+}
+
+.side-link-icon {
+  color: white;
+  font-size: 30px;
+}
