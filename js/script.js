@@ -5,11 +5,19 @@ let noiseBuffer;
 audioContext = new (window.AudioContext || window.webkitAudioContext)();
 const synth = new Tone.Synth().toDestination();
 
+// button to change layout of the keyboard
+//document.getElementById("layoutToggle")
 // Define the key rows for each difficulty level
-const rows = {
+const rowsQwerty = {
   easy: "asdfjkl;",
   medium: "asdfjkl;zxcvm,./",
   hard: "asdfjkl;zxcvm,./qweruiop",
+};
+
+const rowsAzerty = {
+  easy: "qsdfjklm",
+  medium: "qsdfjklmwxcv,;:=",
+  hard: "qsdfjklmwxcv,;:=azeruiop",
 };
 
 // Define the key mappings
@@ -39,12 +47,12 @@ const keyMapping = {
   KeyO: "b5",
   KeyP: "c6",
   Enter: "brown",
-  Space: "white"
+  Space: "white",
 };
 
 // Generate a random sentence based on the difficulty level and sentence length
 function generateRandomSentence(difficulty = "easy", sentenceLength = 79) {
-  const keyRow = rows[difficulty];
+  const keyRow = rowsQwerty[difficulty];
   const sentenceChunks = [];
 
   // Helper function to generate a string of four random characters
@@ -92,6 +100,7 @@ function processUserTypingInput() {
   inputElement.addEventListener("input", () => {
     const arraySentence = sentenceDisplayElement.querySelectorAll("span");
     const arrayValue = inputElement.value.split("");
+    console.log(arrayValue);
 
     let correct = true;
     arraySentence.forEach((characterSpan, index) => {
@@ -104,7 +113,10 @@ function processUserTypingInput() {
         characterSpan.classList.add("correct");
         characterSpan.classList.remove("incorrect");
         characterSpan.classList.remove("underline");
-      } else if (character !== characterSpan.innerText && (characterSpan.innerText === " " || characterSpan.innerText === "\n")) {
+      } else if (
+        character !== characterSpan.innerText &&
+        (characterSpan.innerText === " " || characterSpan.innerText === "\n")
+      ) {
         characterSpan.classList.add("incorrect");
         correct = false;
       } else {
@@ -137,7 +149,11 @@ function processUserTypingInput() {
 function playNoteById(noteId) {
   function createWhiteNoise() {
     const bufferSize = 2 * audioContext.sampleRate; // 2 seconds buffer
-    noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+    noiseBuffer = audioContext.createBuffer(
+      1,
+      bufferSize,
+      audioContext.sampleRate,
+    );
     const output = noiseBuffer.getChannelData(0);
 
     for (let i = 0; i < bufferSize; i++) {
@@ -148,21 +164,25 @@ function playNoteById(noteId) {
   // Brown Noise Generator
   function createBrownNoise() {
     const bufferSize = 2 * audioContext.sampleRate; // 2 seconds buffer
-    noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+    noiseBuffer = audioContext.createBuffer(
+      1,
+      bufferSize,
+      audioContext.sampleRate,
+    );
     const output = noiseBuffer.getChannelData(0);
     let lastOut = 0;
 
     for (let i = 0; i < bufferSize; i++) {
-      output[i] = (Math.random() * 2 - 1) + lastOut * 0.8; // Decaying white noise
+      output[i] = Math.random() * 2 - 1 + lastOut * 0.8; // Decaying white noise
       lastOut = output[i];
     }
   }
 
   // Play Noise Function for a quarter note
   function playNoise(type) {
-    if (type === 'white') {
+    if (type === "white") {
       createWhiteNoise();
-    } else if (type === 'brown') {
+    } else if (type === "brown") {
       createBrownNoise();
     }
 
@@ -175,9 +195,28 @@ function playNoteById(noteId) {
   }
 
   switch (noteId) {
-    case "c3": case "d3": case "e3": case "f3": case "g3": case "a3": case "b3":
-    case "c4": case "d4": case "e4": case "f4": case "g4": case "a4": case "b4":
-    case "c5": case "d5": case "e5": case "f5": case "g5": case "a5": case "b5": case "c6":
+    case "c3":
+    case "d3":
+    case "e3":
+    case "f3":
+    case "g3":
+    case "a3":
+    case "b3":
+    case "c4":
+    case "d4":
+    case "e4":
+    case "f4":
+    case "g4":
+    case "a4":
+    case "b4":
+    case "c5":
+    case "d5":
+    case "e5":
+    case "f5":
+    case "g5":
+    case "a5":
+    case "b5":
+    case "c6":
       synth.triggerAttackRelease(noteId.toUpperCase(), "4n");
       break;
     case "white":
@@ -191,7 +230,7 @@ function playNoteById(noteId) {
 
 document.addEventListener("DOMContentLoaded", processUserTypingInput);
 
-document.addEventListener("keydown", function(event) {
+document.addEventListener("keydown", function (event) {
   if (Tone.context.state !== "running") {
     Tone.start();
   }
@@ -199,6 +238,6 @@ document.addEventListener("keydown", function(event) {
   const noteId = keyMapping[event.code];
   if (noteId) {
     playNoteById(noteId);
+    console.log(event.code);
   }
 });
-
