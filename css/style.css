@@ -17,26 +17,38 @@ body,
 .correct {
   color: black;
 }
+
 .incorrect {
   color: red;
 }
+
+.underline {
+  text-decoration: underline;
+}
+
 .hidden {
   display: none;
 }
+
 .container {
   position: relative;
   width: 400px;
 }
+
 .sentence_display {
   width: 100%;
-  white-space: pre-wrap; /* Preserve spaces and line breaks */
+  white-space: pre-wrap;
+  /* Preserve spaces and line breaks */
   color: rgba(0, 0, 0, 0.5);
 }
+
 .type_input {
   position: relative;
   width: 100%;
-  opacity: 0; /* Make the textarea invisible */
+  opacity: 0;
+  /* Make the textarea invisible */
 }
+
 /* Background Styles Only */
 
 @import url("https://fonts.googleapis.com/css?family=Raleway");

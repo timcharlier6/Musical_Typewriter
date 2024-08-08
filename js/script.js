@@ -1,3 +1,10 @@
+let audioContext;
+let noiseBuffer;
+
+// Initialize the audio context
+audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const synth = new Tone.Synth().toDestination();
+
 // Define the key rows for each difficulty level
 const rows = {
   easy: "asdfjkl;",
@@ -5,40 +12,63 @@ const rows = {
   hard: "asdfjkl;zxcvm,./qweruiop",
 };
 
-function setBackground() {
-  const body = document.querySelector("body");
-  const sentenceDisplayElement = document.getElementById("sentenceDisplay");
+// Define the key mappings
+const keyMapping = {
+  KeyZ: "c3",
+  KeyX: "d3",
+  KeyC: "e3",
+  KeyV: "f3",
+  KeyM: "g3",
+  Comma: "a3",
+  Period: "b3",
+  Slash: "c4",
+  KeyA: "c4",
+  KeyS: "d4",
+  KeyD: "e4",
+  KeyF: "f4",
+  KeyJ: "g4",
+  KeyK: "a4",
+  KeyL: "b4",
+  Semicolon: "c5",
+  KeyQ: "c5",
+  KeyW: "d5",
+  KeyE: "e5",
+  KeyR: "f5",
+  KeyU: "g5",
+  KeyI: "a5",
+  KeyO: "b5",
+  KeyP: "c6",
+  Enter: "brown",
+  Space: "white"
+};
 
-  body.style.backgroundColor = "black";
-  sentenceDisplayElement.style.color = "rgba(255, 255, 255, 0.5)";
-}
-
-// Function to generate a random sentence
-function generateRandomSentence(difficulty = "easy", sentenceLength = 4) {
+// Generate a random sentence based on the difficulty level and sentence length
+function generateRandomSentence(difficulty = "easy", sentenceLength = 79) {
   const keyRow = rows[difficulty];
-  let sentence = "";
-  let spaceCounter = 4; // Position to insert a space
-  let carriageReturnCounter = 19; // Position to insert a newline
+  const sentenceChunks = [];
 
-  for (let i = 0; i < sentenceLength; i++) {
-    if (i === spaceCounter) {
-      sentence += " ";
-      spaceCounter += 5; // Move to the next position for inserting a space
+  // Helper function to generate a string of four random characters
+  function generateChunk() {
+    let chunk = "";
+    for (let i = 0; i < 4; i++) {
+      const randomIndex = Math.floor(Math.random() * keyRow.length);
+      chunk += keyRow[randomIndex];
     }
-
-    if (i === carriageReturnCounter) {
-      sentence += "\n";
-      carriageReturnCounter += 20; // Move to the next position for inserting a newline
-    }
-
-    const randomIndex = Math.floor(Math.random() * keyRow.length);
-    sentence += keyRow[randomIndex];
+    return chunk;
   }
+
+  // Build the sentence in chunks of four characters followed by a space
+  while (sentenceChunks.join(" ").length < sentenceLength) {
+    sentenceChunks.push(generateChunk());
+  }
+
+  // Join chunks with spaces and trim to the desired length
+  const sentence = sentenceChunks.join(" ").slice(0, sentenceLength);
 
   return sentence;
 }
 
-// Function to render a new sentence on the screen
+// Render a new sentence on the screen
 function renderNewSentence(randomSentence) {
   const sentenceDisplayElement = document.getElementById("sentenceDisplay");
   sentenceDisplayElement.innerHTML = "";
@@ -49,13 +79,13 @@ function renderNewSentence(randomSentence) {
   });
 }
 
-// Function to process user typing input
+// Process user typing input
 function processUserTypingInput() {
   const sentenceDisplayElement = document.getElementById("sentenceDisplay");
   const inputElement = document.getElementById("typeInput");
 
-  // Generate the initial sentence
-  let randomSentence = generateRandomSentence("easy", 20);
+  // Generate the initial sentence default
+  let randomSentence = generateRandomSentence();
   renderNewSentence(randomSentence);
 
   // Event listener for user input
@@ -69,23 +99,31 @@ function processUserTypingInput() {
       if (character == null) {
         characterSpan.classList.remove("correct");
         characterSpan.classList.remove("incorrect");
+        characterSpan.classList.remove("underline");
       } else if (character === characterSpan.innerText) {
         characterSpan.classList.add("correct");
         characterSpan.classList.remove("incorrect");
-        characterSpan.classList.remove("transparent");
+        characterSpan.classList.remove("underline");
+      } else if (character !== characterSpan.innerText && (characterSpan.innerText === " " || characterSpan.innerText === "\n")) {
+        characterSpan.classList.add("incorrect");
+        correct = false;
       } else {
         characterSpan.classList.remove("correct");
         characterSpan.classList.add("incorrect");
-        characterSpan.classList.remove("transparent");
+        characterSpan.classList.remove("underline");
         correct = false;
       }
     });
+
+    if (arrayValue.length < arraySentence.length) {
+      arraySentence[arrayValue.length].classList.add("underline");
+    }
 
     if (arrayValue.length === arraySentence.length) {
       if (correct) {
         // Generate a new sentence based on current difficulty level
         const newDifficulty = "medium"; // Change difficulty as needed
-        randomSentence = generateRandomSentence(newDifficulty, 40);
+        randomSentence = generateRandomSentence(newDifficulty, 8);
         renderNewSentence(randomSentence);
         inputElement.value = ""; // Clear the input field
       } else {
@@ -95,4 +133,72 @@ function processUserTypingInput() {
   });
 }
 
+// Play note or noise based on key press
+function playNoteById(noteId) {
+  function createWhiteNoise() {
+    const bufferSize = 2 * audioContext.sampleRate; // 2 seconds buffer
+    noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1; // Values between -1 and 1
+    }
+  }
+
+  // Brown Noise Generator
+  function createBrownNoise() {
+    const bufferSize = 2 * audioContext.sampleRate; // 2 seconds buffer
+    noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    let lastOut = 0;
+
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = (Math.random() * 2 - 1) + lastOut * 0.8; // Decaying white noise
+      lastOut = output[i];
+    }
+  }
+
+  // Play Noise Function for a quarter note
+  function playNoise(type) {
+    if (type === 'white') {
+      createWhiteNoise();
+    } else if (type === 'brown') {
+      createBrownNoise();
+    }
+
+    const noiseSource = audioContext.createBufferSource();
+    noiseSource.buffer = noiseBuffer;
+    noiseSource.connect(audioContext.destination);
+
+    noiseSource.start();
+    noiseSource.stop(audioContext.currentTime + 0.25); // Play for a quarter note (assuming 1 second is a whole note)
+  }
+
+  switch (noteId) {
+    case "c3": case "d3": case "e3": case "f3": case "g3": case "a3": case "b3":
+    case "c4": case "d4": case "e4": case "f4": case "g4": case "a4": case "b4":
+    case "c5": case "d5": case "e5": case "f5": case "g5": case "a5": case "b5": case "c6":
+      synth.triggerAttackRelease(noteId.toUpperCase(), "4n");
+      break;
+    case "white":
+      playNoise("white");
+      break;
+    case "brown":
+      playNoise("brown");
+      break;
+  }
+}
+
 document.addEventListener("DOMContentLoaded", processUserTypingInput);
+
+document.addEventListener("keydown", function(event) {
+  if (Tone.context.state !== "running") {
+    Tone.start();
+  }
+
+  const noteId = keyMapping[event.code];
+  if (noteId) {
+    playNoteById(noteId);
+  }
+});
+
